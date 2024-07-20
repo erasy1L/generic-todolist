@@ -20,6 +20,6 @@ Simple todo list
 
 ## Libraries
 
-1. go-chi as router
-2. zerolog as logger
-3. golang-migrate for migrating the database
+1. [go-chi](https://github.com/go-chi/chi) as router
+2. [zerolog](https://github.com/rs/zerolog) as logger
+3. [golang-migrate](https://github.com/golang-migrate/migrate) for migrating the database
