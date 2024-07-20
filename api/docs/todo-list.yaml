@@ -1,0 +1,153 @@
+openapi: 3.0.0
+info:
+  title: Todo List API
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/api
+    description: Local server
+paths:
+  /todo-list/tasks:
+    post:
+      summary: Create a new task
+      operationId: createTask
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  minLength: 3
+                  maxLength: 200
+                activeAt:
+                  type: string
+                  format: date
+              required:
+                  - title
+                  - activAat
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '404':
+          description: Already exists
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+    get:
+      summary: List of tasks
+      operationId: getTasks
+      parameters:
+        - in: query
+          name: status
+          required: false
+          schema:
+           $ref: '#/components/schemas/Status' 
+          description: Filter tasks by status
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+        '500':
+          description: Internal server error 
+  /todo-list/tasks/{ID}:
+    put:
+      summary: Update a task
+      operationId: updateTask
+      parameters:
+        - in: path
+          name: ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+               type: object
+               properties:
+                title:
+                  type: string
+                  minLength: 3
+                  maxLength: 200
+                activeAt:
+                  type: string
+                  format: date
+               required:
+                  - title
+                  - activAat
+      responses:
+        '204':
+          description: Updated
+        '404':
+          description: Not found
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+    delete: 
+      summary: Delete a task
+      operationId: deleteTask
+      parameters:
+        - in: path
+          name: ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+  /todo-list/tasks/{ID}/done:
+    put:
+      summary: Mark a task as done
+      operationId: markTaskAsDone
+      parameters:
+        - in: path
+          name: ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Updated
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    Task:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+          minLength: 3
+          maxLength: 200
+        activeAt:
+          type: string
+          format: date
+    Status:
+      type: string
+      default: active
+      enum:
+        - active
+        - done
